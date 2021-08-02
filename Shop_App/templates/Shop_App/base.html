@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rosol Restaurant</title>
+        <meta charset="utf-8" lang="en">
+        {% load static %}
+
+        <link href="{% static 'Shop_App/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'Shop_App/shop_style.css' %}" rel="stylesheet" type="text/css">
+    </head>
+
+<body>
+
+  <!--- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-light navstylish">
+        <a class="navbar-brand" href="#">Rosol Restaurant</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link btnstylish" href="{% url 'homepage' %}" type="button">Home</a>
+            <a class="nav-item nav-link btnstylish" href="{% url 'manage_products' %}" type="button">Manage products</a>
+            <a class="nav-item nav-link btnstylish" href="{% url 'add_product' %}" type="button">Add product</a>
+            <a class="nav-item nav-link btnstylish" href="{% url 'products_menu' %}" type="button">Food menu</a>
+            <a class="nav-item nav-link btnstylish" href="#" type="button">Shopping Cart</a>
+            <a class="nav-item nav-link btnstylish" href="#" type="button">Orders</a>
+            <a class="nav-item nav-link btnstylish" href="{% url 'comments' %}" type="button">Comments</a>
+            <a class="nav-item nav-link btnstylish" href="#" type="button">Settings</a>
+          </div>
+        </div>
+      </nav>
+
+
+    {% block content %}
+
+    {% endblock %}
+
+    
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

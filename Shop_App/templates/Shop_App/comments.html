@@ -1,0 +1,124 @@
+{% extends 'Shop_App/base.html' %}
+
+{% block content %}
+
+
+<div class="row mb-1">
+    <div class="col-sm-8 p-5 mx-auto leave-comment">
+        <h1 class="text-center">Comments</h1>
+        <h4 class="h4 text-center">Leave your comment</h4>
+        <form class="form-group" action="{% url 'add_comment' %} " method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'comments' %}">
+            <label for="title">Review title: </label>
+            <input type="text" name="title" maxlength="50">
+            <textarea id="new_comment_content" name="content" rows=5 cols=100>
+
+            </textarea>
+            <label for="author">Author: </label>
+            <input type="text" name="nickname" id="author">
+            <button class="btn btn-outline-success" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+<div class="row mt-1 h-50">
+    <div class="col-sm-8 p-5 mx-auto comment-list">
+        <h2 class="text-center">Comments <small id="com-page-nr"></small></h2>
+
+        <button class="btn btn-outline-success" id="btn-previous-comments">Previous comments</button>
+        <button class="btn btn-outline-success" id="btn-further-comments">Further comments</button>
+        <hr>
+        <div id = "comments">
+
+        </div>
+
+
+        <script>
+            const xhtml = new XMLHttpRequest();
+            const method = "GET";
+            const endpoint = "/comments_list";
+            const response_type = "json";
+
+            xhtml.responseType = response_type;
+            xhtml.open(method, endpoint);
+
+            const generate_comment = (id) => {
+                return(
+                    "<h3><b>" + id.title + " </b>- reviewed by <small>" + id.nickname + "</small></h3><p>" +
+                        id.content + "</p><small class='text-muted'>on " + id.creation_date + "</small><hr>"
+                );
+            }
+
+            const generate_comments = (from, to, listed_comments) => {
+                generated_content = "";
+                for (var i=from; i<to; i++){
+                    if(i<listed_comments.length){
+                        generated_content += generate_comment(listed_comments[i]);
+                    }
+                    else{
+                        return(generated_content);
+                    }
+                }
+                return(
+                    generated_content
+                );
+            }
+            
+            xhtml.onload = function(){
+                const server_response = xhtml.response;
+
+                var listed_comments = server_response.response;
+                console.log(listed_comments);
+                console.log("Is it ok?");
+
+                var page_number = 0;
+                var max_comments = 5;
+                var comment_pages = Math.floor((listed_comments.length)/max_comments)
+
+                var generated_content = generate_comments(0, max_comments, listed_comments);
+
+                document.getElementById("comments").innerHTML = generated_content;
+                document.getElementById("com-page-nr").innerHTML = "Page:" + page_number+1 + "/" + comment_pages+1 + 
+                " (comments: " + listed_comments.length + " )";
+
+                document.getElementById("btn-further-comments").addEventListener("click", function(){
+                    if(page_number==comment_pages){ page_number = 0; }
+                    else { page_number++; }
+                    generated_content = generate_comments(page_number*max_comments,  (page_number+1)*max_comments, listed_comments);
+                    document.getElementById("comments").innerHTML = generated_content;
+                    document.getElementById("com-page-nr").innerHTML = "Page:" + page_number + "/" + comment_pages + " of " + listed_comments.length;
+                    
+                });
+                document.getElementById("btn-previous-comments").addEventListener("click", function(){
+                    if(page_number==0){ page_number = comment_pages; }
+                    else { page_number--; }
+                    generated_content = generate_comments(page_number*max_comments,  (page_number+1)*max_comments, listed_comments);
+                    document.getElementById("comments").innerHTML = generated_content;
+                    document.getElementById("com-page-nr").innerHTML = "Page:" + page_number + "/" + comment_pages + " of " + listed_comments.length;
+                });
+               
+                
+
+            }
+
+            xhtml.send();
+
+
+
+
+            /*
+             for (var i=0; i<max_comments; i++){
+                    if(i+page*max_comments < listed_comments.length)
+                    generated_content += generate_comment(listed_comments[i]);
+                }
+            */
+
+        </script>
+
+    </div>
+</div>
+
+{% endblock %}
+
+
+#

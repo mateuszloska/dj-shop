@@ -1,0 +1,12 @@
+{% extends 'Shop_App/base.html' %}
+
+{% block content %}
+
+<form method = "POST" action=".">
+    <input type="hidden" name="next" value="{% url 'comments' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Leave comment</button>
+</form>
+
+{% endblock %}

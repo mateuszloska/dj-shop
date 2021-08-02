@@ -1,0 +1,74 @@
+{% extends 'Shop_App/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-2 left-side-menu p-2">
+        <h1 class="text-light">Left menu</h1>
+    </div>
+
+    <div class="col-8 main-content p-2">
+
+        <div id = "toGenerate"></div> 
+
+        <script>
+
+          const xhr = new XMLHttpRequest();
+          const method = 'GET';
+          const url = "/products_menu_list";
+          const responseType = "json";
+
+          xhr.responseType = responseType;
+          xhr.open(method, url);
+          xhr.onload = function(){
+            const serverResponse = xhr.response;
+            var listedProducts = serverResponse.response;
+            console.log(listedProducts);
+
+            var generated_content= "";
+            var i;
+            for(i=0; i<listedProducts.length; i++){
+              console.log(i);
+              console.log(listedProducts[i]);
+              console.log(listedProducts[i].description);
+              
+              generated_content += listedProducts[i].description;
+              
+            }
+            document.getElementById("toGenerate").innerHTML = generated_content;
+
+          }
+
+          xhr.send();
+
+        </script>
+
+        <h1>Menu:</h1>
+        <hr>
+            {% for product in all_products %}
+                <div class="card mb-3" style="max-width: 540px;">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{{ product.image.url }}" class="img-fluid rounded-start dish" alt="Dish image">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ product.name }}</h5>
+                      <p class="card-text">{{ product.description }}</p>
+                      <p class="card-text"><small class="text-muted">Date added: {{ product.creation_date }}</small></p>
+                    </div>
+                    <div class="card-footer">
+                        <h5>Price: {{ product.price }} zł</h5>
+                        <button class="btn btn-outline-success" type="button">Add to chart</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+    </div>
+
+    <div class="col-2 right-side-advert p-2">
+        <h2>Advert</h2>
+    </div>
+</div>
+
+{% endblock %}

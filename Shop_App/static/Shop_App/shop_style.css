@@ -1,0 +1,52 @@
+h1.page-title {
+    text-align:center;
+}
+
+body {
+    background-color: #f8f4f4;
+    background-image: url('bg-image.jpg');
+}
+
+nav.navstylish { 
+    background-color: #f5014a;
+    color:#EEEEEE;
+}
+
+a.btnstylish {
+    background-color: #dd0042;
+    color:#EEEEEE;
+}
+
+a.btnstylish:hover {
+    background-color: #b10035;
+    color:#EEEEEE;
+}
+
+.left-side-menu {
+    background-color:#db0041ee;
+    min-height: 600px;
+}
+
+.main-content {
+    background-color: #f8f4f4cf;
+    min-height: 600px;
+}
+
+.leave-comment {
+    background-color: #f8f4f4cf;
+}
+
+.comment-list {
+    background-color: #f8f4f4cf;
+}
+
+.right-side-advert {
+    background-color: #111111ee;
+    min-height: 600px;
+}
+
+img.dish {
+    width: 200px;
+    height: 200px;
+}
+
