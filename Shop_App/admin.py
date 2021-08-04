@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import Product, Comment
+from .models import (Product, Comment,
+ProductCategory, CategoryGroup)
 
-admin.site.register(Product)
 admin.site.register(Comment)
+admin.site.register(Product)
+admin.site.register(ProductCategory)
+admin.site.register(CategoryGroup)
