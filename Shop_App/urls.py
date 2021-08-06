@@ -1,6 +1,17 @@
 from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
+
+
+#---------------important
+#by problems with migrations uncoment following lines
+# from django.contrib import admin
+
+# urlpatterns = [
+#     path('admin/', admin.site.urls),
+# ]
+#and comment all below
+
 from .views import ( manage_products_view, 
 add_product_view, 
 home_view,

@@ -69,12 +69,32 @@ WSGI_APPLICATION = 'Dj_Shop_Project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# SQL-LITE PRIMARY CONFIG
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
+#POSTGRESQL
+DB_USERNAME = environ["DB_USERNAME"]
+DB_PASSWD = environ["DB_PASSWD"]
+DB_PORT = environ["DB_PORT"]
+DB_NAME = environ["DB_NAME"]
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', 
+        'NAME': DB_NAME,
+        'USER': DB_USERNAME,
+        'PASSWORD': DB_PASSWD,
+        'HOST': 'localhost',
+        'PORT': DB_PORT ,
     }
 }
+
 
 
 # Password validation

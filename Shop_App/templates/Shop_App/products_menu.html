@@ -3,22 +3,22 @@
 {% block content %}
 <div class="row">
     <div class="col-2 left-side-menu p-2">
-        <h2 class="text-light">Categories</h2>
+        <h2 class="text-light text-center pt-2 pb-1">Categories</h2>
         <hr>
         <div id="food-cat-menu"></div>
     </div>
 
     <div class="col-8 main-content p-2">
 
-      <h1>Menu:</h1>
+      <h1 class="text-center pt-2 pb-2">Our Menu:</h1>
       <hr>
-      <div id = "toGenerate"></div> 
+      <div id = "toGenerate" class="d-flex flex-row-reverse justify-content-around flex-wrap"></div> 
 
         <script>
 
           /* Function to generate categories */
           const generate_categories = (category_list) => {
-            var generated_content = "lambda" + category_list.length;
+            var generated_content = "";
             for(var i=0; i<category_list.length; i++){
               generated_content+= ` 
                 <div class='row'>
@@ -37,12 +37,13 @@
             for(i=0; i<product_list.length; i++){              
               var menu_position = "";
               menu_position += `
-              <div class="card mb-3" style="max-width: 540px;">
+            
+              <div class="card mb-3" style="width: 400px;">
                 <div class="row g-0">
-                  <div class="col-md-4">
+                  <div class="col-md-5">
                     <img src="`+ product_list[i].image  +`" class="img-fluid rounded-start dish" alt="Dish image">
                   </div>
-                  <div class="col-md-8">
+                  <div class="col-md-7">
                     <div class="card-body">
                       <h5 class="card-title">`+ product_list[i].name;
                       
@@ -131,7 +132,7 @@
             
     </div>
 
-    <div class="col-2 right-side-advert p-2">
+    <div class="col-2 right-side-advert p-2 text-center">
         <h2>Advert</h2>
     </div>
 </div>
