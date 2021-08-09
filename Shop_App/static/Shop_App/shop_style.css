@@ -51,10 +51,14 @@ img.dish {
 }
 
 .vege-menu-bg{
-    background-color: #65a068;
+    background-color: #79bb7d;
     border-color: #328d4d;
 }
 
 .btncats{
     background-color:#c9346166;
+}
+
+.card-order-products{
+    background-color: #ffffff6c;
 }

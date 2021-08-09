@@ -19,7 +19,11 @@ products_menu_view,
 products_menu_list_view,
 comments_view,
 comments_list_view,
-add_comment_view)
+add_comment_view,
+add_to_order_view,
+order_product_list_view,
+del_from_order_view
+)
 
 urlpatterns = [
     path('manage_products/', manage_products_view, name="manage_products"),
@@ -29,6 +33,9 @@ urlpatterns = [
     path('comments/', comments_view, name="comments"),
     path('comments_list/', comments_list_view, name="comments_list"),
     path('add_comment/', add_comment_view, name="add_comment"),
+    path('add_to_order/', add_to_order_view, name="add_to_order"),
+    path('order_product_list_view/', order_product_list_view, name="order_product_list_view"),
+    path('del_from_order_view/', del_from_order_view, name="del_from_order_view"),
     path('', home_view, name="homepage"),
 ]
 

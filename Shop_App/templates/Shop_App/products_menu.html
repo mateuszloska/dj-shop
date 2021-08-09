@@ -1,6 +1,9 @@
 {% extends 'Shop_App/base.html' %}
 
 {% block content %}
+
+{% csrf_token %}
+
 <div class="row">
     <div class="col-2 left-side-menu p-2">
         <h2 class="text-light text-center pt-2 pb-1">Categories</h2>
@@ -9,13 +12,39 @@
     </div>
 
     <div class="col-8 main-content p-2">
+      
+      <div id="div_ordered_products"></div>
 
       <h1 class="text-center pt-2 pb-2">Our Menu:</h1>
       <hr>
-      <div id = "toGenerate" class="d-flex flex-row-reverse justify-content-around flex-wrap"></div> 
+
+        <!-- <input id = "add_to_order_name" type="hidden" name="add_name" value="">
+        <input id = "add_to_order_amount" type="hidden" name="add_amount" value=""> -->
+        <div id = "toGenerate" class="d-flex flex-row-reverse justify-content-around flex-wrap"></div> 
 
         <script>
+        /* Getting Cookies function
+          */
+          function getCookie(name) {
+              let cookieValue = null;
+              if (document.cookie && document.cookie !== '') {
+                  const cookies = document.cookie.split(';');
+                  for (let i = 0; i < cookies.length; i++) {
+                      const cookie = cookies[i].trim();
+                      // Does this cookie string begin with the name we want?
+                      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                          break;
+                      }
+                  }
+              }
+              return cookieValue;
+          }
+          
 
+
+        /*
+        */
           /* Function to generate categories */
           const generate_categories = (category_list) => {
             var generated_content = "";
@@ -27,6 +56,126 @@
                 category_list[i].category + "</a></div>";
             }
             return(generated_content);
+          }
+
+
+
+          const update_products_ordered = () => {
+            div_ordered_products = document.getElementById("div_ordered_products");
+
+            const xreceive = new XMLHttpRequest();
+            const xreceive_method = "GET";
+            const xreceive_url = "/order_product_list_view/";
+            const xreceive_response_type = "json";
+
+            xreceive.responseType = xreceive_response_type;
+            xreceive.open(xreceive_method,xreceive_url,true);
+
+            xreceive.onload = () => {
+              const products_ordered = xreceive.response.products_ordered;
+              if(products_ordered === undefined) return(0);
+              var to_generate = "";
+              
+              console.log("Products ordered", products_ordered)
+
+              to_generate += "<div class='card card-order-products border-success'><h4 class='text-center pt-4'>Products ordered:</h2>"
+              to_generate += "<hr><ol>";
+              for(var i = 0; i<products_ordered.length; i++){
+                to_generate += "<li class='text-center'>";
+                to_generate += products_ordered[i].product_name + " amount: " + products_ordered[i].amount;
+                to_generate += " price: " + products_ordered[i].price + " zl";
+                to_generate += `<button class="btn" id="del_`+products_ordered[i].product_name+`" >
+                 remove</button></li>`;
+                //  to_generate += `<button class="btn" onclick="remove_from_order('`+products_ordered[i].product_name+`')" >
+                //  remove</button></li>`;
+              }
+              to_generate += "</ol></div>";
+              div_ordered_products.innerHTML = to_generate;
+
+              for(i=0; i<products_ordered.length; i++){      
+                if (!!document.getElementById("del_"+products_ordered[i].product_name)){
+
+                  try{
+                  document.getElementById("del_"+products_ordered[i].product_name).addEventListener("click", function(){
+                    let to_remove = this.id.slice(4); //ommiting del_ on the beginning of the id
+                    console.log("ONCLICK FUNCTION CALLED for ", to_remove); 
+                    remove_from_order(to_remove);
+                    });
+                  }
+                  catch (error) { console.error("Something went wrong"); }
+
+                } //endif
+              } //endfor
+
+            }
+
+            xreceive.send();
+            
+          }
+          
+
+          /*Removing products from order
+          */
+          const remove_from_order = (product_name) => {
+
+              //XHTTP Request AJAX connection
+              const xsend = new XMLHttpRequest();
+              const xsend_method = 'POST';
+              const xsend_url = "/del_from_order_view/";
+              const csrftoken = getCookie('csrftoken');
+              xsend.open(xsend_method, xsend_url, true);
+              xsend.setRequestHeader("X-CSRFToken", csrftoken);
+              xsend.setRequestHeader("Content-Type", "application/json;charset=UTF-8"); 
+              
+              var data = `{"product_name": "` + product_name + `"}`;
+              console.log("REMOVING" , data);
+
+              data = JSON.parse(data);
+              data = JSON.stringify(data)
+              console.log(data);
+
+              xsend.onload = () => {
+                update_products_ordered();
+              }
+              xsend.send(data); 
+
+              console.log("FIRST")
+              
+            }
+          
+
+          /*Adding products to order
+          */
+          const add_to_order = (product_name, i) => {
+            //Check the amount of products added
+            amount = document.getElementById("amount_"+i).value;
+            document.getElementById("amount_"+i).value = 1;
+            amount = parseInt(amount);
+            if (amount>100 || amount<1) amount=null;
+
+            if (Number.isInteger(amount)){
+            
+              console.log("Adding ", product_name, " amount:", amount);
+
+              //XHTTP Request AJAX connection
+              const xsend = new XMLHttpRequest();
+              const xsend_method = 'POST';
+              const xsend_url = "/add_to_order/";
+              const csrftoken = getCookie('csrftoken');
+              xsend.open(xsend_method, xsend_url, true);
+              xsend.setRequestHeader("X-CSRFToken", csrftoken);
+              xsend.setRequestHeader("Content-Type", "application/json;charset=UTF-8"); 
+              
+              var data = `{"product_name": "` + product_name + `",
+                      "amount": `+ amount +`}`;
+              data = JSON.parse(data);
+              data = JSON.stringify(data)
+              console.log(data);
+              xsend.onload = () => {
+                update_products_ordered();
+              }
+              xsend.send(data); 
+            }
           }
 
           /* Function to generate the menu list */
@@ -59,7 +208,9 @@
                     
               menu_position +=`
                         <h5>Price: `+ product_list[i].price +` zł</h5>
-                        <button class="btn btn-outline-success" type="button">Add to order</button>
+                        <input type="number" max="100" id="amount_` + i +`" value=1 >
+                        <button class="btn btn-outline-success" type="button" onclick="add_to_order('` + product_list[i].name +
+                        `',`+i+`)">Add to order</button>
                     </div>
                   </div>
                 </div>
@@ -86,14 +237,14 @@
             // generating the menu list for the first time
             var generated_content= "";
             var i;
-            for(i=0; i<listed_products.length; i++){              
+            for(i=0; i<listed_products.length; i++){      
               generated_content += listed_products[i].description;
-              
-            }
+            } //endfor
             generate_menu_list(listed_products); 
 
             // generating categories
             var listed_categories = res.categories;
+
             document.getElementById("food-cat-menu").innerHTML = generate_categories(listed_categories);
 
             // adding actions to buttons
@@ -136,5 +287,11 @@
         <h2>Advert</h2>
     </div>
 </div>
+
+
+<script>
+  window.onload = update_products_ordered();
+</script>
+
 
 {% endblock %}
